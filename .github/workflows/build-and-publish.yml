@@ -25,10 +25,10 @@ jobs:
       run: make test
       
     - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: word-cloud-generator
-        path: ./artifacts/linux/word-cloud-generator
+        name: word-cloud-generator-${{ matrix.runs-on }}
+        path: ./artifacts/linux/word-cloud-generator-${{ matrix.runs-on }}.txt
         retention-days: 2
 
   build-docker:
@@ -36,14 +36,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Fetch binary
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: word-cloud-generator
-          path: ./artifacts/linux/
-          
+          path: ./artifacts/linux
+	  pattern: word-cloud-generator-*
+	  merge-multiple: true/
+         
+ 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
